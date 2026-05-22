@@ -1,0 +1,4 @@
+[build]
+base = "product-search-react-typescript"
+publish = "dist"
+command = "npm run build"

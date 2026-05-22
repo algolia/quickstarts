@@ -65,19 +65,19 @@ export default function App() {
   return (
     <InstantSearch indexName="quickstart-products" searchClient={searchClient}>
       <Configure hitsPerPage={12} />
-      <div className="demo-credentials-note">
-        <span className="demo-credentials-icon" aria-hidden="true">
-          i
-        </span>
-        <span>
-          This app uses a hosted demo Algolia index. To connect your own index,{" "}
-          <a href="https://www.algolia.com/users/sign_up" rel="noreferrer" target="_blank">
-            sign up for Algolia
+      <header className="app-banner">
+        <p className="app-banner-description">
+          Like what you see? Explore the{" "}
+          <a
+            href="https://www.algolia.com/doc/guides/get-started/quickstart"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Algolia docs
           </a>{" "}
-          and set <code>VITE_ALGOLIA_APPLICATION_ID</code> and{" "}
-          <code>VITE_ALGOLIA_SEARCH_API_KEY</code>.
-        </span>
-      </div>
+          to get started building.
+        </p>
+      </header>
       <div className="search-header">
         <SearchBox placeholder="Search products" />
         <PoweredBy />
