@@ -1,6 +1,8 @@
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import type { Hit } from "instantsearch.js";
 import {
+  Chat,
+  ChatTrigger,
   Configure,
   Highlight,
   Hits,
@@ -12,10 +14,13 @@ import {
   Snippet,
 } from "react-instantsearch";
 import "instantsearch.css/themes/reset-min.css";
+import "instantsearch.css/components/chat.css";
+import "instantsearch.css/components/ai-mode-button.css";
 import "./App.css";
 
 const appId = import.meta.env.VITE_ALGOLIA_APPLICATION_ID;
 const apiKey = import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY;
+const agentId = import.meta.env.VITE_ALGOLIA_AGENT_ID;
 
 if (!appId) {
   console.error("Missing environment variable: VITE_ALGOLIA_APPLICATION_ID");
@@ -23,6 +28,10 @@ if (!appId) {
 
 if (!apiKey) {
   console.error("Missing environment variable: VITE_ALGOLIA_SEARCH_API_KEY");
+}
+
+if (!agentId) {
+  console.error("Missing environment variable: VITE_ALGOLIA_AGENT_ID");
 }
 
 type ProductRecord = {
@@ -35,25 +44,62 @@ type ProductRecord = {
 
 type ProductHit = Hit<ProductRecord>;
 
-type ProductCardProps = {
-  hit: ProductHit;
+type ProductItem = ProductRecord & {
+  objectID: string;
+  __position: number;
+  __queryID?: string;
+  _highlightResult?: ProductHit["_highlightResult"];
+  _snippetResult?: ProductHit["_snippetResult"];
 };
 
-function ProductCard({ hit }: ProductCardProps) {
+type ProductCardProps = {
+  hit?: ProductHit;
+  item?: ProductItem;
+  onClick?: () => void;
+  onAuxClick?: () => void;
+};
+
+function hasHighlightResult(product: ProductHit | ProductItem): product is ProductHit {
+  return Boolean(product._highlightResult?.title);
+}
+
+function hasSnippetResult(product: ProductHit | ProductItem): product is ProductHit {
+  return Boolean(product._snippetResult?.description);
+}
+
+function ProductCard({ hit, item, onClick, onAuxClick }: ProductCardProps) {
+  const product = hit ?? item;
+
+  if (!product) {
+    throw new Error("ProductCard requires either `hit` or `item`.");
+  }
+
   return (
-    <article className="product-card">
+    <article
+      className="product-card"
+      onAuxClick={onAuxClick}
+      onClick={onClick}
+    >
       <div className="product-card-image">
-        <img src={hit.showcase_image} alt={hit.title} />
+        <img src={product.showcase_image} alt={product.title} />
       </div>
       <div className="product-card-body">
-        <p className="product-card-type">{hit.product_type}</p>
+        <p className="product-card-type">{product.product_type}</p>
         <h2 className="product-card-title">
-          <Highlight attribute="title" hit={hit} />
+          {hasHighlightResult(product) ? (
+            <Highlight attribute="title" hit={product} />
+          ) : (
+            product.title
+          )}
         </h2>
         <p className="product-card-description">
-          <Snippet attribute="description" hit={hit} />
+          {hasSnippetResult(product) ? (
+            <Snippet attribute="description" hit={product} />
+          ) : (
+            product.description
+          )}
         </p>
-        <p className="product-card-price">${hit.price}</p>
+        <p className="product-card-price">${product.price}</p>
       </div>
     </article>
   );
@@ -79,8 +125,16 @@ export default function App() {
         </p>
       </header>
       <div className="search-header">
-        <SearchBox placeholder="Search products" />
+        <SearchBox placeholder="Search products" aiMode />
         <PoweredBy />
+      </div>
+
+      <div>
+        <Chat<ProductItem>
+          agentId={agentId}
+          feedback={true}
+          itemComponent={ProductCard}
+        />
       </div>
 
       <div className="search-body">
@@ -92,10 +146,12 @@ export default function App() {
         </div>
 
         <div className="search-results">
-          <Hits hitComponent={ProductCard} />
+          <Hits<ProductRecord> hitComponent={ProductCard} />
           <Pagination />
         </div>
       </div>
+
+      <ChatTrigger />
     </InstantSearch>
   );
 }

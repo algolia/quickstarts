@@ -17,7 +17,23 @@
   --color-error: #dc2626;
   --color-error-surface: #fef2f2;
   --color-error-ring: rgb(220 38 38 / 0.12);
+
+  --ais-text-color-rgb: 17, 24, 39;
+  --ais-primary-color-rgb: 84, 104, 255;
+  --ais-muted-color-rgb: 107, 114, 128;
+  --ais-border-color-rgb: 229, 231, 235;
+  --ais-background-color-rgb: 255, 255, 255;
+  --ais-shadow-color-rgb: 17, 24, 39;
+  --ais-border-radius-sm: 0.5rem;
+  --ais-border-radius-md: 0.75rem;
+  --ais-border-radius-lg: 0.75rem;
+  --ais-chat-width: min(26rem, calc(100vw - 2rem));
+  --ais-chat-height: min(40rem, calc(100dvh - 8rem));
+  --ais-chat-maximized-width: min(64rem, calc(100vw - 2rem));
+  --ais-chat-margin: 1rem;
+  --ais-chat-maximized-height: calc(100dvh - var(--ais-chat-margin) * 2);
 }
+
 
 body {
   margin: 0;
@@ -68,6 +84,12 @@ body {
   gap: 2rem;
 }
 
+.ais-SearchBox-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
 .ais-SearchBox-input,
 .ais-Pagination-link {
   border: 1px solid var(--color-border);
@@ -77,6 +99,7 @@ body {
 
 .ais-SearchBox-input {
   inline-size: 100%;
+  min-inline-size: 0;
   padding-block: 0.75rem;
   padding-inline: 1rem;
   font: inherit;
@@ -94,6 +117,46 @@ body {
 .ais-SearchBox-reset {
   display: none;
 }
+
+.ais-AiModeButton {
+  flex: 0 0 auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 0.1875rem transparent;
+}
+
+.ais-AiModeButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.1875rem var(--color-accent-ring);
+}
+
+.ais-Chat-container,
+.ais-ChatToggleButton {
+  border: 1px solid var(--color-border);
+}
+
+.ais-Chat-container {
+  box-shadow: 0 1rem 2.5rem rgb(17 24 39 / 0.16);
+}
+
+body:has(.ais-ChatToggleButton--floating) .ais-ChatOverlayLayout--maximized {
+  bottom: var(--ais-chat-margin);
+}
+
+.ais-ChatToggleButton {
+  box-shadow: 0 0.75rem 1.5rem rgb(84 104 255 / 0.25);
+}
+
+.ais-ChatPrompt-body:focus-within {
+  border-color: var(--color-accent);
+  outline-color: var(--color-accent);
+}
+
+.ais-ChatMessages-content--clearing {
+  transition:
+    opacity 1ms var(--ais-transition-timing-function),
+    filter 1ms var(--ais-transition-timing-function) !important;
+}
+
 
 .ais-RefinementList-list,
 .ais-Hits-list {
