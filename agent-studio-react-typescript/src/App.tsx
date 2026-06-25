@@ -14,7 +14,7 @@ import {
   Snippet,
 } from "react-instantsearch";
 import "instantsearch.css/themes/reset-min.css";
-import "instantsearch.css/components/chat.css";
+import "instantsearch.css/components/chat-min.css";
 import "instantsearch.css/components/ai-mode-button.css";
 import "./App.css";
 
@@ -44,6 +44,13 @@ type ProductRecord = {
 
 type ProductHit = Hit<ProductRecord>;
 
+const shoppingAssistantPrompts = [
+  "Find me a summer wedding outfit",
+  "Show sneakers under $150",
+  "What goes with wide-leg jeans?",
+  "Help me choose the right size",
+];
+
 type ProductItem = ProductRecord & {
   objectID: string;
   __position: number;
@@ -65,6 +72,39 @@ function hasHighlightResult(product: ProductHit | ProductItem): product is Produ
 
 function hasSnippetResult(product: ProductHit | ProductItem): product is ProductHit {
   return Boolean(product._snippetResult?.description);
+}
+
+function ShoppingAssistantWelcome({
+  sendMessage,
+  status,
+}: {
+  sendMessage?: (params: { text: string }) => void;
+  status?: string;
+}) {
+  const disabled = status !== undefined && status !== "ready";
+
+  return (
+    <div className="ais-ChatGreeting">
+      <h2 className="ais-ChatGreeting-heading">How can I help you shop today?</h2>
+      <p className="ais-ChatGreeting-subheading">
+        Ask for outfit ideas, product recommendations, sizing help, or style
+        advice.
+      </p>
+      <div className="ais-ChatPromptSuggestions">
+        {shoppingAssistantPrompts.map((prompt) => (
+          <button
+            className="ais-ChatPromptSuggestions-suggestion"
+            disabled={disabled || !sendMessage}
+            key={prompt}
+            onClick={() => sendMessage?.({ text: prompt })}
+            type="button"
+          >
+            {prompt}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function ProductCard({ hit, item, onClick, onAuxClick }: ProductCardProps) {
@@ -125,15 +165,25 @@ export default function App() {
         </p>
       </header>
       <div className="search-header">
-        <SearchBox placeholder="Search products" aiMode />
+        <SearchBox
+          placeholder="Search products"
+          aiMode
+          translations={{ aiModeButtonTitle: "Ask assistant" }}
+        />
         <PoweredBy />
       </div>
 
       <div>
         <Chat<ProductItem>
           agentId={agentId}
+          emptyComponent={ShoppingAssistantWelcome}
           feedback={true}
           itemComponent={ProductCard}
+          translations={{
+            header: {
+              title: "Shopping assistant",
+            },
+          }}
         />
       </div>
 
