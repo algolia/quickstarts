@@ -35,11 +35,7 @@ type ProductRecord = {
 
 type ProductHit = Hit<ProductRecord>;
 
-type ProductCardProps = {
-  hit: ProductHit;
-};
-
-function ProductCard({ hit }: ProductCardProps) {
+function ProductCard({ hit }: { hit: ProductHit }) {
   return (
     <article className="product-card">
       <div className="product-card-image">
