@@ -67,15 +67,15 @@ export default function App() {
       <Configure hitsPerPage={12} />
       <header className="app-banner">
         <p className="app-banner-description">
-          Ready to build? Explore the{" "}
+          Follow the{" "}
           <a
             href="https://www.algolia.com/doc/guides/get-started/quickstart"
             rel="noreferrer"
             target="_blank"
           >
-            Algolia docs
+            Algolia quickstart
           </a>{" "}
-          and get started in minutes.
+          and start building in minutes.
         </p>
       </header>
       <div className="search-header">
