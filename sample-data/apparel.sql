@@ -4,14 +4,14 @@ SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `apparel`;
 CREATE TABLE `apparel` (
-  `objectID` VARCHAR(255) NOT NULL,
-  `color` JSON,
+  `objectID` VARCHAR(191) NOT NULL,
+  `color` LONGTEXT,
   `description` TEXT,
-  `hierarchical_categories` JSON,
+  `hierarchical_categories` LONGTEXT,
   `price` DECIMAL(12,2),
   `product_type` VARCHAR(255),
   `showcase_image` TEXT,
-  `tags` JSON,
+  `tags` LONGTEXT,
   `taxable` TINYINT(1),
   `title` VARCHAR(512),
   `units_sold` INT,
