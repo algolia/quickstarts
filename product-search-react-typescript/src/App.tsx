@@ -25,6 +25,8 @@ if (!apiKey) {
   console.error("Missing environment variable: VITE_ALGOLIA_SEARCH_API_KEY");
 }
 
+const searchClient = algoliasearch(appId, apiKey);
+
 type ProductRecord = {
   title: string;
   description: string;
@@ -35,11 +37,7 @@ type ProductRecord = {
 
 type ProductHit = Hit<ProductRecord>;
 
-type ProductCardProps = {
-  hit: ProductHit;
-};
-
-function ProductCard({ hit }: ProductCardProps) {
+function ProductCard({ hit }: { hit: ProductHit }) {
   return (
     <article className="product-card">
       <div className="product-card-image">
@@ -60,8 +58,6 @@ function ProductCard({ hit }: ProductCardProps) {
 }
 
 export default function App() {
-  const searchClient = algoliasearch(appId, apiKey);
-
   return (
     <InstantSearch indexName="quickstart-products" searchClient={searchClient}>
       <Configure hitsPerPage={12} />
