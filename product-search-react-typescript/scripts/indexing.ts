@@ -1,7 +1,7 @@
 /* Index sample data into an Algolia index `quickstart-products`.
  *
- * This script is optional. The app already uses a hosted demo index and runs without it.
- * To index your own data, add `ALGOLIA_WRITE_API_KEY` to `.env.local`.
+ * Run this once before starting the app, so it has an index to search.
+ * Requires `ALGOLIA_WRITE_API_KEY` in `.env.local`.
  * Consider this key a **secret**. Don't expose it and don't commit it to GitHub.
  */
 import { algoliasearch } from "algoliasearch";
@@ -20,7 +20,7 @@ if (!appId) {
 
 if (!writeApiKey) {
   throw new Error(
-    "Missing ALGOLIA_WRITE_API_KEY. This key is only needed to index your own records. The demo app runs without it. Add it to .env.local, and never commit it.",
+    "Missing ALGOLIA_WRITE_API_KEY. Add it to .env.local, and never commit it.",
   );
 }
 
