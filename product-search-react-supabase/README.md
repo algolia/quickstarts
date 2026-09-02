@@ -28,11 +28,13 @@ point; there is just no data to search.
 
 Open Supabase from your Vercel project's integration page. Download the
 [Algolia apparel sample data](https://raw.githubusercontent.com/algolia/quickstarts/main/sample-data/apparel.csv)
-(1,000 products) and import it via **Table Editor** → **Insert** → **Import data from
+(1,000 products) and import it via **Table Editor** → **+ New table** → **Import Data from
 CSV**. Name the table `apparel`, and select `objectID` as the primary key — the connector
 requires it.
 
 The importer creates the table and infers the column types, so there is no schema to run.
+(Supabase also offers **Insert** → **Import Data from CSV**, but that path only applies to a
+table that already exists.)
 
 ## Connect Algolia
 
