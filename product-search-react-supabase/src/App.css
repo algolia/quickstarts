@@ -288,3 +288,31 @@ body {
     gap: 1.5rem;
   }
 }
+
+/* Setup guidance for an index that is not ready yet. InstantSearch already marks empty
+ * widgets with .ais-Hits--empty and .ais-RefinementList--noRefinement, so no component
+ * needs to know about it. :placeholder-shown keeps the copy to an untouched search box --
+ * a query that legitimately matches nothing is an ordinary empty result, not a setup
+ * problem. */
+body:has(.ais-SearchBox-input:placeholder-shown) .ais-Hits--empty::after {
+  content: "Nothing to search yet. Your products will appear here once the index has records.";
+}
+
+body:has(.ais-SearchBox-input:placeholder-shown)
+  .filter-panel:has(.ais-RefinementList--noRefinement)
+  .filter-panel-section {
+  display: none;
+}
+
+body:has(.ais-SearchBox-input:placeholder-shown)
+  .filter-panel:has(.ais-RefinementList--noRefinement)::before {
+  content: "Filters are waiting on your index configuration. They'll fill in once faceting is set up.";
+}
+
+.ais-Hits--empty::after,
+.filter-panel::before {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
