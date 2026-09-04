@@ -6,12 +6,11 @@ Postgres data. [Supabase](https://supabase.com) stores the products,
 [Algolia Supabase connector](https://www.algolia.com/doc/guides/sending-and-managing-data/send-and-update-your-data/connectors/supabase)
 keeps the index in sync — no sync code in the app.
 
-This is the deployable companion to the connector quickstart: finish the quickstart, click
-Deploy, and search runs over your own data.
+This is the deployable companion to the [Supabase Connector Quickstart](https://www.algolia.com/doc/guides/sending-and-managing-data/send-and-update-your-data/connectors/supabase). This README takes you through a similar flow, but using a template and Vercel native integrations for Algolia and Supabase.
 
 ## Deploy your own
 
-The button installs both integrations on your new project — Supabase provisions a Postgres
+The button installs both integrations on your new Vercel project — Supabase provisions a Postgres
 database, Algolia provisions an application — and injects their environment variables.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=product-search-react-supabase&repository-name=product-search-react-supabase&repository-url=https%3A%2F%2Fgithub.com%2Falgolia%2Fquickstarts%2Ftree%2Fmain%2Fproduct-search-react-supabase&products=%255B%257B%2522type%2522%253A%2522integration%2522%252C%2522protocol%2522%253A%2522other%2522%252C%2522productSlug%2522%253A%2522application%2522%252C%2522integrationSlug%2522%253A%2522algolia%2522%257D%252C%257B%2522type%2522%253A%2522integration%2522%252C%2522protocol%2522%253A%2522storage%2522%252C%2522productSlug%2522%253A%2522supabase%2522%252C%2522integrationSlug%2522%253A%2522supabase%2522%257D%255D)
@@ -61,7 +60,20 @@ Refresh the browser, and search is live, but not the filters.
 The index needs four settings. The search UI reads all of them, and the first two fail
 silently if unset. Any route below works — then refresh the page.
 
-### Either: one API call
+You can provision the index manually in the dashboard, or skip below to provision via API
+
+### Option 1: Configure via the Algolia dashboard
+
+Open Algolia from your Vercel project's integration page and make sure to select the `quickstart-products` index. Use the **Configuration** tab to set the following for your index:
+
+| Setting | Dashboard location | Value | If unset |
+| --- | --- | --- | --- |
+| `attributesForFaceting` | **Configuration** → **Facets** | `product_type`, `price_range` | Sidebar filters render empty |
+| `attributesToSnippet` | **Configuration** → **Snippeting** | `description`, length `30` | Every card shows no description |
+| `searchableAttributes` | **Configuration** → **Searchable attributes** | `title`, `product_type`, `description`; leave the ordering dropdown on its **Unordered** default | Defaults to all attributes |
+| `customRanking` | **Configuration** → **Ranking and Sorting** | add `units_sold`, then `price`; set each to **Descending** in the dropdown beside it | Popular products no longer surface first |
+
+### Option 2: Configure via one API call
 
 Nothing to install. Copy `ALGOLIA_APP_ID` and `ALGOLIA_WRITE_API_KEY` from **Environment
 Variables** in your Vercel project's left-hand menu, set them in your shell, then paste this
@@ -85,31 +97,6 @@ curl -X PUT "https://$ALGOLIA_APP_ID.algolia.net/1/indexes/quickstart-products/s
 
 A successful call returns `{"updatedAt":...,"taskID":...}`. A DNS error means the variables
 are not set in the shell you pasted into.
-
-### Or: the Algolia dashboard
-
-Open Algolia from your Vercel project's integration page, then on index
-`quickstart-products`:
-
-| Setting | Dashboard location | Value | If unset |
-| --- | --- | --- | --- |
-| `attributesForFaceting` | **Configuration** → **Facets** | `product_type`, `price_range` | Sidebar filters render empty |
-| `attributesToSnippet` | **Configuration** → **Snippeting** | `description`, length `30` | Every card shows no description |
-| `searchableAttributes` | **Configuration** → **Searchable attributes** | `title`, `product_type`, `description`; leave the ordering dropdown on its **Unordered** default | Defaults to all attributes |
-| `customRanking` | **Configuration** → **Ranking and Sorting** | add `units_sold`, then `price`; set each to **Descending** in the dropdown beside it | Popular products no longer surface first |
-
-### Or: the configure-index script
-
-Only if you already have a local checkout — see [Local development](#local-development) for
-`gitpick` and pulling credentials. Needs `ALGOLIA_WRITE_API_KEY` in `.env.local`.
-
-```bash
-npm run configure:index
-```
-
-[`scripts/configure-index.ts`](scripts/configure-index.ts) applies all four settings in one
-call. It never writes records — the connector supplies those, and its transformation derives
-`price_range`, which no index setting can produce on its own.
 
 ### Then refresh
 
@@ -154,7 +141,16 @@ Then:
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+You can also configure the index locally using the configure-index script
+
+```bash
+npm run configure:index
+```
+
+[`scripts/configure-index.ts`](scripts/configure-index.ts) applies all four settings in one
+call. It never writes records — the connector supplies those, and its transformation derives
+`price_range`, which no index setting can produce on its own.
+
 
 ## How it works
 
@@ -195,6 +191,10 @@ Key files:
 - Enable incremental sync with a soft-delete column so removals propagate to the index.
 - Trigger the connector task from the [Ingestion API](https://www.algolia.com/doc/rest-api/ingestion/)
   as a server-side extension instead of the dashboard schedule.
+
+## Add an Agent
+
+Add a chat agent to this project by following the [Agent Studio Quickstart](https://www.algolia.com/doc/guides/algolia-ai/agent-studio/how-to/quickstart)
 
 ## License
 
