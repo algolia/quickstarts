@@ -10,7 +10,6 @@
  * Needs ALGOLIA_WRITE_API_KEY. Treat that key as a secret; never commit it.
  */
 import { algoliasearch } from "algoliasearch";
-import ora from "ora";
 import { loadEnv } from "vite";
 
 const env = loadEnv(process.env.MODE ?? "dev", process.cwd(), "");
@@ -30,10 +29,9 @@ if (!writeApiKey) {
 }
 
 const client = algoliasearch(appId, writeApiKey);
-const spinner = ora();
 
 try {
-  spinner.start(`Configuring ${indexName}...`);
+  console.log(`Configuring ${indexName}...`);
 
   const { taskID } = await client.setSettings({
     indexName,
@@ -50,9 +48,9 @@ try {
   });
 
   await client.waitForTask({ indexName, taskID });
-  spinner.succeed(`Successfully configured ${indexName}.`);
+  console.log(`Successfully configured ${indexName}.`);
 } catch (error) {
-  spinner.fail("Index configuration failed.");
+  console.error("Index configuration failed.");
   console.error(error);
   process.exitCode = 1;
 }
