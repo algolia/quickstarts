@@ -35,7 +35,9 @@ type ProductRecord = {
   showcase_image: string;
 };
 
-function ProductCard({ hit }: { hit: Hit<ProductRecord> }) {
+type ProductHit = Hit<ProductRecord>;
+
+function ProductCard({ hit }: { hit: ProductHit }) {
   return (
     <article className="product-card">
       <div className="product-card-image">

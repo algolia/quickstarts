@@ -1,7 +1,7 @@
-# Product Search Quickstart: React InstantSearch + TypeScript
+# Agent Studio Quickstart: React InstantSearch + TypeScript
 
-This repo is a small product-search app built with React InstantSearch and TypeScript.
-For more information, see [Build your first search experience](https://www.algolia.com/doc/guides/get-started/quickstart).
+This repo is a product-search app with an Agent Studio shopping assistant, built with React InstantSearch and TypeScript.
+For more information, see [Build your first agent](https://www.algolia.com/doc/guides/algolia-ai/agent-studio/how-to/quickstart).
 
 ## Requirements
 
@@ -14,7 +14,7 @@ Run the following commands to download the quickstart code, connect it to your A
 1. Download the quickstart code from GitHub:
 
    ```sh
-   npx gitpick algolia/quickstarts/tree/main/product-search-react-typescript
+   npx gitpick algolia/quickstarts/tree/main/agent-studio-react-typescript
    ```
 
 1. Install dependencies:
@@ -28,12 +28,13 @@ Run the following commands to download the quickstart code, connect it to your A
 1. Copy `.env.example` to `.env.local`.
    (This file contains secrets, don't expose it or commit it to GitHub.)
 
-1. Add your application ID and API keys from [the dashboard](https://dashboard.algolia.com/account/api-keys):
+1. Add your application ID, API keys, and agent ID. Find the keys in [the dashboard](https://dashboard.algolia.com/account/api-keys):
 
    ```sh
    VITE_ALGOLIA_APPLICATION_ID=your_application_id
    VITE_ALGOLIA_SEARCH_API_KEY=your_search_only_api_key
    ALGOLIA_WRITE_API_KEY=your_write_api_key
+   VITE_ALGOLIA_AGENT_ID=your_agent_id
    ```
 
    > [!WARNING]

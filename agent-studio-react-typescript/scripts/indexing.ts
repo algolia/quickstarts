@@ -5,7 +5,6 @@
  * Consider this key a **secret**. Don't expose it and don't commit it to GitHub.
  */
 import { algoliasearch } from "algoliasearch";
-import ora from "ora";
 import { loadEnv } from "vite";
 
 const env = loadEnv(process.env.MODE ?? "dev", process.cwd(), "");
@@ -25,10 +24,9 @@ if (!writeApiKey) {
 }
 
 const client = algoliasearch(appId, writeApiKey);
-const spinner = ora();
 
 async function indexProducts() {
-  spinner.start("Fetching the products dataset...");
+  console.log("Fetching the products dataset...");
 
   const response = await fetch(
     "https://dashboard.algolia.com/api/1/sample_datasets?type=apparel",
@@ -42,20 +40,25 @@ async function indexProducts() {
 
   const products = await response.json();
 
-  spinner.text = `Indexing ${products.length.toLocaleString()} products into ${indexName}...`;
+  console.log(
+    `Indexing ${products.length.toLocaleString()} products into ${indexName}...`,
+  );
 
   await client.saveObjects({
     indexName,
     objects: products,
     waitForTasks: true,
   });
+}
 
-  spinner.text = `Add facet to ${indexName}...`;
+async function configureIndex() {
+  console.log(`Configuring ${indexName}...`);
 
   const { taskID } = await client.setSettings({
     indexName,
     indexSettings: {
       attributesForFaceting: ["product_type"],
+      attributesToSnippet: ["description:30"],
     },
   });
 
@@ -63,10 +66,12 @@ async function indexProducts() {
 }
 
 try {
+  console.log("Beginning index setup...");
   await indexProducts();
-  spinner.succeed("Successfully indexed products.");
+  await configureIndex();
+  console.log("Successfully indexed and configured products.");
 } catch (error) {
-  spinner.fail("Indexing failed.");
+  console.error("Indexing failed.");
   console.error(error);
   process.exitCode = 1;
 }
